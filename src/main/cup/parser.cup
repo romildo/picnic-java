@@ -11,7 +11,15 @@ terminal        IF, THEN, ELSE;
 terminal        LET, IN;
 
 non terminal program;
+non terminal exp;
 
 start with program;
 
-program ::= ;
+program ::=
+  exp
+;
+
+exp ::=
+  LITBOOL
+| LITINT
+;
