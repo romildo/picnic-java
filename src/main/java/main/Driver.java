@@ -28,6 +28,9 @@ class DriverOptions {
 
    @Parameter(names = {"--lexer", "-l"}, description = "Lexical analysis")
    public boolean lexer = false;
+
+   @Parameter(names = {"--parser", "-p"}, description = "Parser")
+   public boolean parser = false;
 }
 
 // main
@@ -69,6 +72,8 @@ public class Driver {
          // do only lexical analyses
          if (options.lexer)
             lexicalAnalysis(name, input);
+         else if (options.parser)
+            syntaxAnalysis(options, name, input);
 
       }
       catch (CompilerError e) {
