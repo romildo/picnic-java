@@ -11,7 +11,7 @@ public interface ErrorHelper {
    }
 
    static CompilerError error(int line, int col, String format, Object... args) {
-      return error(line, col, format, args);
+      return new CompilerError(line, col, format, args);
    }
 
    static FatalError fatal(String format, Object... args) {
