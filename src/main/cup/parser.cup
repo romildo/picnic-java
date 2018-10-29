@@ -13,6 +13,9 @@ terminal        LET, IN;
 non terminal program;
 non terminal exp;
 
+precedence nonassoc EQ;
+precedence left     PLUS;
+
 start with program;
 
 program ::=
@@ -22,4 +25,6 @@ program ::=
 exp ::=
   LITBOOL
 | LITINT
+| exp PLUS exp
+| exp EQ exp
 ;
