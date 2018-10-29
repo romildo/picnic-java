@@ -94,6 +94,8 @@
                <symbolsName>SymbolConstants</symbolsName>
                <symbolsInterface>true</symbolsInterface>
                <expectedConflicts>0</expectedConflicts>
+               <dumpGrammar>true</dumpGrammar>
+               <dumpStates>true</dumpStates>
             </configuration>
          </plugin>
 
