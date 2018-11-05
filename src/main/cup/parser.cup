@@ -3,7 +3,7 @@ package parse;
 terminal String LITINT;
 terminal String ID;
 terminal        PLUS;
-terminal        EQ;
+terminal        EQ, LT;
 terminal        LPAREN, RPAREN, COMMA;
 terminal        BOOL, INT;
 terminal        IF, THEN, ELSE;
@@ -17,7 +17,7 @@ non terminal typeids;
 non terminal fun;
 non terminal funs;
 
-precedence nonassoc EQ;
+precedence nonassoc LT;
 precedence left     PLUS;
 
 start with program;
@@ -30,7 +30,7 @@ exp ::=
   LITINT
 | ID
 | exp PLUS exp
-| exp EQ exp
+| exp LT exp
 | LET ID EQ exp IN exp
 | IF exp THEN exp ELSE exp
 | ID LPAREN exps RPAREN
