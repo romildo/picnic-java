@@ -1,6 +1,5 @@
 package parse;
 
-terminal String LITBOOL;
 terminal String LITINT;
 terminal String ID;
 terminal        PLUS;
@@ -28,8 +27,7 @@ program ::=
 ;
 
 exp ::=
-  LITBOOL
-| LITINT
+  LITINT
 | ID
 | exp PLUS exp
 | exp EQ exp

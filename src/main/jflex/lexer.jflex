@@ -53,9 +53,6 @@ id        = [a-zA-Z][a-zA-Z0-9_]*
 "#" .*       { /* skip */ }
 "{#"         { yybegin(COMMENT); commentLevel = 1; }
 
-true         { return tok(LITBOOL, true); }
-false        { return tok(LITBOOL, false); }
-
 {litint}     { return tok(LITINT, yytext()); }
 
 bool         { return tok(BOOL); }
