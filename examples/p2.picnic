@@ -1,0 +1,4 @@
+int main(int argc, bool found) =
+  let r = 4
+  in let pi = 3
+     in 2 + pi + r

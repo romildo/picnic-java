@@ -12,6 +12,11 @@ terminal        LET, IN;
 
 non terminal program;
 non terminal exp;
+non terminal exps;
+non terminal typeid;
+non terminal typeids;
+non terminal fun;
+non terminal funs;
 
 precedence nonassoc EQ;
 precedence left     PLUS;
@@ -19,12 +24,40 @@ precedence left     PLUS;
 start with program;
 
 program ::=
-  exp
+  funs
 ;
 
 exp ::=
   LITBOOL
 | LITINT
+| ID
 | exp PLUS exp
 | exp EQ exp
+| LET ID EQ exp IN exp
+| IF exp THEN exp ELSE exp
+| ID LPAREN exps RPAREN
+;
+
+exps ::=
+  exp
+| exp COMMA exps
+;
+        
+fun ::=
+  typeid LPAREN typeids RPAREN EQ exp
+;
+
+typeid ::=
+  INT ID
+| BOOL ID
+;
+
+typeids ::=
+  typeid
+| typeid COMMA typeids
+;
+
+funs ::=
+  fun
+| fun funs
 ;
