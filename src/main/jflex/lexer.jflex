@@ -65,8 +65,9 @@ in           { return tok(IN); }
 
 {id}         { return tok(ID, yytext().intern()); }
 
-"+"          { return tok(PLUS); }
 "="          { return tok(EQ); }
+"<"          { return tok(LT); }
+"+"          { return tok(PLUS); }
 "("          { return tok(LPAREN); }
 ")"          { return tok(RPAREN); }
 ","          { return tok(COMMA); }
