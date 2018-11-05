@@ -1,4 +1,0 @@
-int main() =
-  let r = 3
-  in let pi = 3
-     in 2 * pi * r
