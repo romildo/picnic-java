@@ -1,6 +1,7 @@
 package parse;
 
 import absyn.*;
+import io.vavr.collection.List;
 
 
 terminal String LITINT;
@@ -12,13 +13,13 @@ terminal        BOOL, INT;
 terminal        IF, THEN, ELSE;
 terminal        LET, IN;
 
-non terminal     program;
-non terminal Exp exp;
-non terminal     exps;
-non terminal     typeid;
-non terminal     typeids;
-non terminal     fun;
-non terminal     funs;
+non terminal           program;
+non terminal Exp       exp;
+non terminal List<Exp> exps;
+non terminal           typeid;
+non terminal           typeids;
+non terminal           fun;
+non terminal           funs;
 
 precedence nonassoc LT;
 precedence left     PLUS;
@@ -31,17 +32,17 @@ program ::=
 
 exp ::=
   LITINT:cte                       {: RESULT = new ExpNum(cte); :}
-//| ID
-//| exp PLUS exp
-//| exp LT exp
-//| LET ID EQ exp IN exp
+| ID:n                             {: RESULT = new ExpVar(n); :}
+| exp:x PLUS exp:y                 {: RESULT = new ExpOp(Operator.PLUS, x, y); :}
+| exp:x LT exp:y                   {: RESULT = new ExpOp(Operator.LT, x, y); :}
+| LET ID:v EQ exp:i IN exp:b       {: RESULT = new ExpLet(v, i, b); :}
 | IF exp:t THEN exp:a ELSE exp:b   {: RESULT = new ExpIf(t, a, b); :}
-//| ID LPAREN exps RPAREN
+| ID:f LPAREN exps:args RPAREN     {: RESULT = new ExpCall(f, args); :}
 ;
 
 exps ::=
-  exp
-| exp COMMA exps
+  exp:x                            {: RESULT = List.of(x); :}
+| exp:x COMMA exps:xs              {: RESULT = xs.prepend(x); :}
 ;
         
 fun ::=
