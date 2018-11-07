@@ -1,5 +1,8 @@
 package parse;
 
+import absyn.*;
+
+
 terminal String LITINT;
 terminal String ID;
 terminal        PLUS;
@@ -9,31 +12,31 @@ terminal        BOOL, INT;
 terminal        IF, THEN, ELSE;
 terminal        LET, IN;
 
-non terminal program;
-non terminal exp;
-non terminal exps;
-non terminal typeid;
-non terminal typeids;
-non terminal fun;
-non terminal funs;
+non terminal     program;
+non terminal Exp exp;
+non terminal     exps;
+non terminal     typeid;
+non terminal     typeids;
+non terminal     fun;
+non terminal     funs;
 
 precedence nonassoc LT;
 precedence left     PLUS;
 
-start with program;
+start with exp;
 
 program ::=
   funs
 ;
 
 exp ::=
-  LITINT
-| ID
-| exp PLUS exp
-| exp LT exp
-| LET ID EQ exp IN exp
-| IF exp THEN exp ELSE exp
-| ID LPAREN exps RPAREN
+  LITINT:cte                       {: RESULT = new ExpNum(cte); :}
+//| ID
+//| exp PLUS exp
+//| exp LT exp
+//| LET ID EQ exp IN exp
+| IF exp:t THEN exp:a ELSE exp:b   {: RESULT = new ExpIf(t, a, b); :}
+//| ID LPAREN exps RPAREN
 ;
 
 exps ::=
