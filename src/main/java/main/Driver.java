@@ -7,10 +7,14 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
+import absyn.AST;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 import error.CompilerError;
+import io.vavr.render.dot.DotFile;
+import io.vavr.render.text.Boxes;
+import io.vavr.render.text.PrettyPrinter;
 import java_cup.runtime.Symbol;
 import parse.Lexer;
 import parse.Parser;
@@ -31,6 +35,15 @@ class DriverOptions {
 
    @Parameter(names = {"--parser", "-p"}, description = "Parser")
    public boolean parser = false;
+
+   @Parameter(names = {"--pp-ast"}, description = "Pretty print syntax tree")
+   public boolean pp_ast = false;
+
+   @Parameter(names = {"--box-ast"}, description = "Boxed syntax tree")
+   public boolean box_ast = false;
+
+   @Parameter(names = {"--dot-ast"}, description = "Generate dot file of syntax tree")
+   public boolean dot_ast = false;
 }
 
 // main
@@ -44,8 +57,7 @@ public class Driver {
 
       try {
          jCommander.parse(args);
-      }
-      catch (ParameterException e) {
+      } catch (ParameterException e) {
          System.out.println(e.getMessage());
          jCommander.usage();
          System.exit(1);
@@ -63,8 +75,7 @@ public class Driver {
          if (options.parameters.isEmpty()) {
             name = "unknown";
             input = new InputStreamReader(System.in);
-         }
-         else {
+         } else {
             name = options.parameters.get(0);
             input = new FileReader(name);
          }
@@ -75,27 +86,22 @@ public class Driver {
          else if (options.parser)
             syntaxAnalysis(options, name, input);
 
-      }
-      catch (CompilerError e) {
+      } catch (CompilerError e) {
          System.out.println(e.getMessage());
          System.exit(3);
-      }
-      catch (IOException e) {
+      } catch (IOException e) {
          System.out.println(e.getMessage());
          System.exit(2);
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
          System.out.println(e.getMessage());
          e.printStackTrace();
          System.exit(3);
-      }
-      finally {
+      } finally {
          // closes the input file
          if (input instanceof FileReader)
             try {
                input.close();
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                System.out.println(e.getMessage());
                System.exit(4);
             }
@@ -115,7 +121,26 @@ public class Driver {
       final Lexer lexer = new Lexer(input);
       final Parser parser = new Parser(lexer);
       final Symbol result = parser.parse();
-      System.out.println(result);
+
+      if (!(result.value instanceof AST))
+         throw fatal("internal error: program should be an AST");
+
+      final AST parseTree = (AST) result.value;
+      if (options.pp_ast) {
+         System.out.println("===Abstract syntax tree:===========");
+         System.out.println();
+         System.out.println(PrettyPrinter.pp(parseTree.toTree()));
+         System.out.println();
+      }
+      if (options.box_ast) {
+         System.out.println("===Abstract syntax tree:===========");
+         System.out.println();
+         System.out.println(Boxes.box(parseTree.toTree()));
+         System.out.println();
+      }
+      if (options.dot_ast) {
+         DotFile.write(parseTree.toTree(), name + ".dot");
+      }
    }
 
 }
