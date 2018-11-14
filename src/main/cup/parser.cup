@@ -51,7 +51,7 @@ fun ::=
 
 typeid ::=
   INT ID:x           {: RESULT = new TypeId(TyInt.getInstance(), x); :}
-| BOOL ID:x          {: RESULT = new TypeId(TyInt.getInstance(), x); :}
+| BOOL ID:x          {: RESULT = new TypeId(TyBool.getInstance(), x); :}
 ;
 
 typeids ::=
