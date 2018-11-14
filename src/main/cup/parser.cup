@@ -13,21 +13,21 @@ terminal        BOOL, INT;
 terminal        IF, THEN, ELSE;
 terminal        LET, IN;
 
-non terminal           program;
-non terminal Exp       exp;
-non terminal List<Exp> exps;
-non terminal           typeid;
-non terminal           typeids;
-non terminal           fun;
-non terminal           funs;
+non terminal Program      program;
+non terminal Exp          exp;
+non terminal List<Exp>    exps;
+non terminal TypeId       typeid;
+non terminal List<TypeId> typeids;
+non terminal Fun          fun;
+non terminal List<Fun>    funs;
 
 precedence nonassoc LT;
 precedence left     PLUS;
 
-start with exp;
+start with program;
 
 program ::=
-  funs
+  funs:fs         {: RESULT = new Program(fs); :}
 ;
 
 exp ::=
@@ -46,20 +46,20 @@ exps ::=
 ;
         
 fun ::=
-  typeid LPAREN typeids RPAREN EQ exp
+  typeid:n LPAREN typeids:ps RPAREN EQ exp:b  {: RESULT = new Fun(n, ps, b); :}
 ;
 
 typeid ::=
-  INT ID
-| BOOL ID
+  INT ID:x           {: RESULT = new TypeId(TyInt.getInstance(), x); :}
+| BOOL ID:x          {: RESULT = new TypeId(TyInt.getInstance(), x); :}
 ;
 
 typeids ::=
-  typeid
-| typeid COMMA typeids
+  typeid:x                      {: RESULT = List.of(x); :}
+| typeid:x COMMA typeids:xs     {: RESULT = xs.prepend(x); :}
 ;
 
 funs ::=
-  fun
-| fun funs
+  fun:x           {: RESULT = List.of(x); :}
+| fun:x funs:xs   {: RESULT = xs.prepend(x); :}
 ;
