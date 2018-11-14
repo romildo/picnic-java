@@ -50,8 +50,8 @@ fun ::=
 ;
 
 typeid ::=
-  INT ID:x           {: RESULT = new TypeId(TyInt.getInstance(), x); :}
-| BOOL ID:x          {: RESULT = new TypeId(TyBool.getInstance(), x); :}
+  INT:t ID:x           {: RESULT = new TypeId(new Loc(txleft, xxright), new TyInt(new Loc(txleft, txright)), x); :}
+| BOOL:t ID:x          {: RESULT = new TypeId(new Loc(txleft, xxright), new TyBool(new Loc(txleft, txright)), x); :}
 ;
 
 typeids ::=

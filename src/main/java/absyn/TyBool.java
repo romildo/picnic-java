@@ -6,15 +6,12 @@
 package absyn;
 
 import io.vavr.collection.Tree;
+import parse.Loc;
 
 public class TyBool extends Ty {
-   private static TyBool ourInstance = new TyBool();
 
-   public static TyBool getInstance() {
-      return ourInstance;
-   }
-
-   private TyBool() {
+   public TyBool(Loc loc) {
+      super(loc);
    }
 
    @java.lang.Override

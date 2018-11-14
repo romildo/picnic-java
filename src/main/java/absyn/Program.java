@@ -3,12 +3,14 @@ package absyn;
 import io.vavr.collection.List;
 import io.vavr.collection.Tree;
 import io.vavr.render.ToTree;
+import parse.Loc;
 
 public class Program extends AST {
 
    public final List<Fun> functions;
 
-   public Program(List<Fun> functions) {
+   public Program(Loc loc, List<Fun> functions) {
+      super(loc);
       this.functions = functions;
    }
 

@@ -6,15 +6,12 @@
 package absyn;
 
 import io.vavr.collection.Tree;
+import parse.Loc;
 
 public class TyInt extends Ty {
-   private static TyInt ourInstance = new TyInt();
 
-   public static TyInt getInstance() {
-      return ourInstance;
-   }
-
-   private TyInt() {
+   public TyInt(Loc loc) {
+      super(loc);
    }
 
    @java.lang.Override
