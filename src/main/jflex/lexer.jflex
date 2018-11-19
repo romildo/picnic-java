@@ -1,8 +1,12 @@
 package parse;
 
+import absyn.Loc;
 import error.ErrorHelper;
 
 import java_cup.runtime.Symbol;
+import java_cup.runtime.SymbolFactory;
+import java_cup.runtime.ComplexSymbolFactory.Location;
+import java_cup.runtime.ComplexSymbolFactory;
 
 %%
 
@@ -30,9 +34,32 @@ import java_cup.runtime.Symbol;
 %{
    private String unit;
 
-   // Lexical symbol construction
+   private ComplexSymbolFactory complexSymbolFactory = new ComplexSymbolFactory();
+
+   public SymbolFactory getSymbolFactory() {
+      return complexSymbolFactory;
+   }
+
+   // auxiliary methods to construct terminal symbols at current location
+
+   private Location locLeft() {
+      return new Location(unit, yyline + 1, yycolumn + 1, yychar);
+   }
+
+   private Location locRight() {
+      return new Location(unit, yyline + 1, yycolumn + 1 + yylength(), yychar + yylength());
+   }
+
+   private java_cup.runtime.Symbol tok(int type, Object value, Location left, Location right) {
+      return complexSymbolFactory.newSymbol(yytext(), type, left, right, value);
+   }
+
+   private Symbol tok(int type, String lexeme, Object value) {
+      return complexSymbolFactory.newSymbol(lexeme, type, locLeft(), locRight(), value);
+   }
+
    private Symbol tok(int type, Object value) {
-      return new Symbol(type, yyline+1, yycolumn+1, value);
+      return tok(type, yytext(), value);
    }
 
    private Symbol tok(int type) {
@@ -41,7 +68,7 @@ import java_cup.runtime.Symbol;
 
    // Error handling
    private void error(String format, Object... args) {
-      throw ErrorHelper.error(yyline+1, yycolumn+1,
+      throw ErrorHelper.error(Loc.loc(locLeft(), locRight()),
                               "lexical error: " + format,
                               args);
    }

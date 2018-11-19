@@ -1,5 +1,7 @@
 package error;
 
+import absyn.Loc;
+
 public class CompilerError extends RuntimeException {
 
    public CompilerError(String message) {
@@ -10,7 +12,7 @@ public class CompilerError extends RuntimeException {
       this(String.format(format, args));
    }
 
-   public CompilerError(int line, int col, String format, Object... args) {
-      this(String.format("%d:%d", line, col) + " " + String.format(format, args));
+   public CompilerError(Loc loc, String format, Object... args) {
+      this(loc + " " + String.format(format, args));
    }
 }

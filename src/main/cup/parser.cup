@@ -1,8 +1,52 @@
 package parse;
 
 import absyn.*;
+import error.ErrorHelper;
 import io.vavr.collection.List;
+import java_cup.runtime.Symbol;
+import java_cup.runtime.ComplexSymbolFactory.ComplexSymbol;
+import java_cup.runtime.ComplexSymbolFactory.Location;
 
+parser code {:
+  public Parser(Lexer lex) {
+     this(lex, lex.getSymbolFactory());
+  }
+
+  private Loc loc(Location left, Location right) {
+     return Loc.loc(left, right);
+  }
+
+  /* override error routines */
+  private Loc locOfInfo(Object info) {
+     return info instanceof ComplexSymbol ?
+               Loc.loc((ComplexSymbol) info) :
+               info instanceof Symbol ?
+                  Loc.loc((Symbol) info) :
+                  Loc.loc(cur_token);
+  }
+
+  private String lexemeOfInfo(Object info) {
+     return info instanceof ComplexSymbol ?
+               " at '" + ((ComplexSymbol) info).getName() + "'" :
+               "";
+
+  }
+
+  public void report_fatal_error(String message, Object info) {
+     done_parsing();
+     throw ErrorHelper.error(locOfInfo(info),
+                             "%s%s%nCan't recover from previous error(s), giving up.",
+                             message,
+                             lexemeOfInfo(info));
+  }
+
+  public void report_error(String message, Object info) {
+     throw ErrorHelper.error(locOfInfo(info),
+                             "%s%s",
+                             message,
+                             lexemeOfInfo(info));
+  }
+:};
 
 terminal String LITINT;
 terminal String ID;
@@ -27,39 +71,39 @@ precedence left     PLUS;
 start with program;
 
 program ::=
-  funs:fs         {: RESULT = new Program(fs); :}
+  funs:fs {: RESULT = new Program(fs); :}
 ;
 
 exp ::=
-  LITINT:cte                       {: RESULT = new ExpNum(cte); :}
-| ID:n                             {: RESULT = new ExpVar(n); :}
-| exp:x PLUS exp:y                 {: RESULT = new ExpOp(Operator.PLUS, x, y); :}
-| exp:x LT exp:y                   {: RESULT = new ExpOp(Operator.LT, x, y); :}
-| LET ID:v EQ exp:i IN exp:b       {: RESULT = new ExpLet(v, i, b); :}
-| IF exp:t THEN exp:a ELSE exp:b   {: RESULT = new ExpIf(t, a, b); :}
-| ID:f LPAREN exps:args RPAREN     {: RESULT = new ExpCall(f, args); :}
+  LITINT:cte                     {: RESULT = new ExpNum(cte); :}
+| ID:n                           {: RESULT = new ExpVar(n); :}
+| exp:x PLUS exp:y               {: RESULT = new ExpOp(Operator.PLUS, x, y); :}
+| exp:x LT exp:y                 {: RESULT = new ExpOp(Operator.LT, x, y); :}
+| LET ID:v EQ exp:i IN exp:b     {: RESULT = new ExpLet(v, i, b); :}
+| IF exp:t THEN exp:a ELSE exp:b {: RESULT = new ExpIf(t, a, b); :}
+| ID:f LPAREN exps:args RPAREN   {: RESULT = new ExpCall(f, args); :}
 ;
 
 exps ::=
-  exp:x                            {: RESULT = List.of(x); :}
-| exp:x COMMA exps:xs              {: RESULT = xs.prepend(x); :}
+  exp:x               {: RESULT = List.of(x); :}
+| exp:x COMMA exps:xs {: RESULT = xs.prepend(x); :}
 ;
         
 fun ::=
-  typeid:n LPAREN typeids:ps RPAREN EQ exp:b  {: RESULT = new Fun(n, ps, b); :}
+  typeid:n LPAREN typeids:ps RPAREN EQ exp:b {: RESULT = new Fun(n, ps, b); :}
 ;
 
 typeid ::=
-  INT ID:x           {: RESULT = new TypeId(TyInt.getInstance(), x); :}
-| BOOL ID:x          {: RESULT = new TypeId(TyBool.getInstance(), x); :}
+  INT ID:x  {: RESULT = new TypeId(TyInt.getInstance(), x); :}
+| BOOL ID:x {: RESULT = new TypeId(TyBool.getInstance(), x); :}
 ;
 
 typeids ::=
-  typeid:x                      {: RESULT = List.of(x); :}
-| typeid:x COMMA typeids:xs     {: RESULT = xs.prepend(x); :}
+  typeid:x                  {: RESULT = List.of(x); :}
+| typeid:x COMMA typeids:xs {: RESULT = xs.prepend(x); :}
 ;
 
 funs ::=
-  fun:x           {: RESULT = List.of(x); :}
-| fun:x funs:xs   {: RESULT = xs.prepend(x); :}
+  fun:x         {: RESULT = List.of(x); :}
+| fun:x funs:xs {: RESULT = xs.prepend(x); :}
 ;
