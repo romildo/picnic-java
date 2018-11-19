@@ -109,7 +109,7 @@ public class Driver {
    }
 
    private static void lexicalAnalysis(String name, Reader input) throws IOException {
-      final Lexer lexer = new Lexer(input);
+      final Lexer lexer = new Lexer(input, name);
       Symbol tok;
       do {
          tok = (Symbol) lexer.next_token();
@@ -118,7 +118,7 @@ public class Driver {
    }
 
    public static void syntaxAnalysis(DriverOptions options, String name, Reader input) throws Exception {
-      final Lexer lexer = new Lexer(input);
+      final Lexer lexer = new Lexer(input, name);
       final Parser parser = new Parser(lexer);
       final Symbol result = parser.parse();
 
