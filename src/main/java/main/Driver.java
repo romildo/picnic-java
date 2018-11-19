@@ -15,6 +15,7 @@ import error.CompilerError;
 import io.vavr.render.dot.DotFile;
 import io.vavr.render.text.Boxes;
 import io.vavr.render.text.PrettyPrinter;
+import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.Symbol;
 import parse.Lexer;
 import parse.Parser;
@@ -110,10 +111,10 @@ public class Driver {
 
    private static void lexicalAnalysis(String name, Reader input) throws IOException {
       final Lexer lexer = new Lexer(input, name);
-      Symbol tok;
+      ComplexSymbolFactory.ComplexSymbol tok;
       do {
-         tok = (Symbol) lexer.next_token();
-         System.out.println(Terminals.dumpSimpleTerminal(tok));
+         tok = (ComplexSymbolFactory.ComplexSymbol) lexer.next_token();
+         System.out.println(Terminals.dumpTerminal(tok));
       } while (tok.sym != Terminals.EOF);
    }
 

@@ -1,5 +1,7 @@
 package error;
 
+import absyn.Loc;
+
 public interface ErrorHelper {
 
    static CompilerError error(String message) {
@@ -10,8 +12,8 @@ public interface ErrorHelper {
       return error(String.format(format, args));
    }
 
-   static CompilerError error(int line, int col, String format, Object... args) {
-      return new CompilerError(line, col, format, args);
+   static CompilerError error(Loc loc, String format, Object... args) {
+      return new CompilerError(loc, format, args);
    }
 
    static FatalError fatal(String format, Object... args) {
