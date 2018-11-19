@@ -49,6 +49,7 @@ parser code {:
 :};
 
 terminal String LITINT;
+terminal String LITBOOL;
 terminal String ID;
 terminal        PLUS;
 terminal        EQ, LT;
@@ -77,6 +78,7 @@ program ::=
 
 exp ::=
   LITINT:cte                       {: RESULT = new ExpInt(loc(ctexleft, ctexright), cte); :}
+| LITBOOL:cte                      {: RESULT = new ExpBool(loc(ctexleft, ctexright), cte); :}
 | ID:n                             {: RESULT = new ExpVar(loc(nxleft, nxright), n); :}
 | exp:x PLUS exp:y                 {: RESULT = new ExpBin(loc(xxleft, yxright), BinOp.PLUS, x, y); :}
 | exp:x LT exp:y                   {: RESULT = new ExpBin(loc(xxleft, yxright), BinOp.LT, x, y); :}

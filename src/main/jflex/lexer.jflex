@@ -80,6 +80,7 @@ import java_cup.runtime.ComplexSymbolFactory;
 %state COMMENT
 
 litint    = [0-9]+
+litbool   = true | false
 id        = [a-zA-Z][a-zA-Z0-9_]*
 
 %%
@@ -90,6 +91,7 @@ id        = [a-zA-Z][a-zA-Z0-9_]*
 "{#"         { yybegin(COMMENT); commentLevel = 1; }
 
 {litint}     { return tok(LITINT, yytext()); }
+{litbool}    { return tok(LITBOOL, yytext()); }
 
 bool         { return tok(BOOL); }
 int          { return tok(INT); }
