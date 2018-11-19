@@ -1,6 +1,6 @@
 package absyn;
 
-public enum Operator {
+public enum BinOp {
    PLUS,
    LT;
 }
