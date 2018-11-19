@@ -76,7 +76,7 @@ program ::=
 ;
 
 exp ::=
-  LITINT:cte                       {: RESULT = new ExpNum(loc(ctexleft, ctexright), cte); :}
+  LITINT:cte                       {: RESULT = new ExpInt(loc(ctexleft, ctexright), cte); :}
 | ID:n                             {: RESULT = new ExpVar(loc(nxleft, nxright), n); :}
 | exp:x PLUS exp:y                 {: RESULT = new ExpOp(loc(xxleft, yxright), Operator.PLUS, x, y); :}
 | exp:x LT exp:y                   {: RESULT = new ExpOp(loc(xxleft, yxright), Operator.LT, x, y); :}
