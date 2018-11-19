@@ -10,7 +10,8 @@ public class Fun extends AST {
    public final List<TypeId> parameters;
    public final Exp body;
 
-   public Fun(TypeId name, List<TypeId> parameters, Exp body) {
+   public Fun(Loc loc, TypeId name, List<TypeId> parameters, Exp body) {
+      super(loc);
       this.name = name;
       this.parameters = parameters;
       this.body = body;

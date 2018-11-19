@@ -8,7 +8,8 @@ public class ExpIf extends Exp {
    public final Exp alt1;
    public final Exp alt2;
 
-   public ExpIf(Exp test, Exp alt1, Exp alt2) {
+   public ExpIf(Loc loc, Exp test, Exp alt1, Exp alt2) {
+      super(loc);
       this.test = test;
       this.alt1 = alt1;
       this.alt2 = alt2;

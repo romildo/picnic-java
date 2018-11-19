@@ -8,7 +8,8 @@ public class ExpOp extends Exp {
    public final Exp left;
    public final Exp right;
 
-   public ExpOp(Operator op, Exp left, Exp right) {
+   public ExpOp(Loc loc, Operator op, Exp left, Exp right) {
+      super(loc);
       this.op = op;
       this.left = left;
       this.right = right;

@@ -8,7 +8,8 @@ public class ExpLet extends Exp {
    public final Exp init;
    public final Exp body;
 
-   public ExpLet(String var, Exp init, Exp body) {
+   public ExpLet(Loc loc, String var, Exp init, Exp body) {
+      super(loc);
       this.var = var;
       this.init = init;
       this.body = body;

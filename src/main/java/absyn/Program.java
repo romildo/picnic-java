@@ -8,7 +8,8 @@ public class Program extends AST {
 
    public final List<Fun> functions;
 
-   public Program(List<Fun> functions) {
+   public Program(Loc loc, List<Fun> functions) {
+      super(loc);
       this.functions = functions;
    }
 

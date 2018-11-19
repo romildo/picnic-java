@@ -6,6 +6,13 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public abstract class AST implements ToTree<String> {
 
+   // Location of the phrase in the source code
+   protected final Loc loc;
+
+   public AST(Loc loc) {
+      this.loc = loc;
+   }
+   
    @Override
    public String toString() {
       return ToStringBuilder.reflectionToString(

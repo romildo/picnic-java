@@ -94,6 +94,8 @@
                <symbolsName>SymbolConstants</symbolsName>
                <symbolsInterface>true</symbolsInterface>
                <expectedConflicts>0</expectedConflicts>
+               <!-- Makes CUP generate xleft/xright handles for accessing Location objects for symbol start/end inside actions. -->
+               <locations>true</locations>
                <dumpGrammar>true</dumpGrammar>
                <dumpStates>true</dumpStates>
             </configuration>
