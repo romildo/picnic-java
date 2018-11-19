@@ -9,13 +9,13 @@ import types.Type;
 import static error.ErrorHelper.fatal;
 import static error.ErrorHelper.typeMismatch;
 
-public class ExpOp extends Exp {
+public class ExpBin extends Exp {
 
-   public final Operator op;
+   public final BinOp op;
    public final Exp left;
    public final Exp right;
 
-   public ExpOp(Loc loc, Operator op, Exp left, Exp right) {
+   public ExpBin(Loc loc, BinOp op, Exp left, Exp right) {
       super(loc);
       this.op = op;
       this.left = left;
@@ -24,7 +24,7 @@ public class ExpOp extends Exp {
 
    @Override
    public Tree.Node<String> toTree() {
-      return Tree.of(annotateType("ExpOp: " + op),
+      return Tree.of(annotateType("ExpBin: " + op),
                      left.toTree(),
                      right.toTree());
    }
