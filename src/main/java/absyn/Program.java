@@ -1,8 +1,13 @@
 package absyn;
 
+import env.Entry;
+import env.Env;
+import env.FunEntry;
 import io.vavr.collection.List;
 import io.vavr.collection.Tree;
 import io.vavr.render.ToTree;
+
+import static error.ErrorHelper.noMain;
 
 public class Program extends AST {
 
@@ -18,4 +23,24 @@ public class Program extends AST {
       return Tree.of("Program",
                      functions.map(ToTree::toTree));
    }
+
+   // A program is a sequence of one or more mutually recursive
+   // function declarations. There should be at least one function
+   // named main returning an integer and with an integer argument.
+
+   // Semantic analysis of the program should check each function
+   // declaration, adding it to the environment, as well as check the
+   // main function existence.
+
+   // Do semantic analysis of the program.
+   public void semantic(Env env) {
+      functions.forEach(f -> f.checkSignature(env));
+      functions.forEach(f -> f.checkBody(env));
+
+      // check main
+      Entry entry = env.venv.get("main".intern());
+      if (! (entry instanceof FunEntry))
+         throw noMain(loc);
+   }
+
 }

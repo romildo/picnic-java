@@ -1,6 +1,8 @@
 package absyn;
 
+import env.Env;
 import io.vavr.collection.Tree;
+import types.Type;
 
 public class TypeId extends AST {
 
@@ -19,4 +21,10 @@ public class TypeId extends AST {
                      type.toTree(),
                      Tree.of(id));
    }
+
+   Type semantic(Env env) {
+      return type.semantic(env);
+   }
+
+
 }

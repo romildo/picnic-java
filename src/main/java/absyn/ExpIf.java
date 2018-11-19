@@ -1,6 +1,12 @@
 package absyn;
 
+import env.Env;
 import io.vavr.collection.Tree;
+import types.BOOL;
+import types.INT;
+import types.Type;
+
+import static error.ErrorHelper.typeMismatch;
 
 public class ExpIf extends Exp {
 
@@ -17,9 +23,26 @@ public class ExpIf extends Exp {
 
    @Override
    public Tree.Node<String> toTree() {
-      return Tree.of("ExpIf",
+      return Tree.of(annotateType("ExpIf"),
                      test.toTree(),
                      alt1.toTree(),
                      alt2.toTree());
    }
+
+   @Override
+   protected Type semantic_(Env env) {
+      // check the test
+      test.semantic(env);
+      if (! test.type.is(BOOL.T))
+         throw typeMismatch(test.loc, test.type, BOOL.T);
+      // check the alternatives
+      alt1.semantic(env);
+      alt2.semantic(env);
+      if (alt1.type.is(alt2.type))
+         return alt2.type;
+      if (alt2.type.is(alt1.type))
+         return alt1.type;
+      throw typeMismatch(alt2.loc, alt2.type, alt1.type);
+   }
+
 }
