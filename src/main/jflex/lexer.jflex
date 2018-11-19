@@ -20,7 +20,16 @@ import java_cup.runtime.Symbol;
     return tok(EOF);
 %eofval}
 
+
+%ctorarg String unitName
+
+%init{
+   this.unit = unitName;
+%init}
+
 %{
+   private String unit;
+
    // Lexical symbol construction
    private Symbol tok(int type, Object value) {
       return new Symbol(type, yyline+1, yycolumn+1, value);
