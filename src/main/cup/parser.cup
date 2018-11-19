@@ -51,8 +51,9 @@ parser code {:
 terminal String LITINT;
 terminal String LITBOOL;
 terminal String ID;
-terminal        PLUS;
-terminal        EQ, LT;
+terminal        PLUS, MINUS, TIMES, DIV, POWER;
+terminal        EQ, NE, LT, LE, GT, GE;
+terminal        AND, OR;
 terminal        LPAREN, RPAREN, COMMA;
 terminal        BOOL, INT;
 terminal        IF, THEN, ELSE;
@@ -67,8 +68,12 @@ non terminal List<TypeId> typeids;
 non terminal Fun          fun;
 non terminal List<Fun>    funs;
 
-precedence nonassoc LT;
-precedence left     PLUS;
+precedence left     OR;
+precedence left     AND;
+precedence nonassoc EQ, NE, LT, LE, GT, GE;
+precedence left     PLUS, MINUS;
+precedence left     TIMES, DIV;
+precedence right    POWER;
 
 start with program;
 
@@ -81,7 +86,18 @@ exp ::=
 | LITBOOL:cte                      {: RESULT = new ExpBool(loc(ctexleft, ctexright), cte); :}
 | ID:n                             {: RESULT = new ExpVar(loc(nxleft, nxright), n); :}
 | exp:x PLUS exp:y                 {: RESULT = new ExpBin(loc(xxleft, yxright), BinOp.PLUS, x, y); :}
+| exp:x MINUS exp:y                {: RESULT = new ExpBin(loc(xxleft, yxright), BinOp.MINUS, x, y); :}
+| exp:x TIMES exp:y                {: RESULT = new ExpBin(loc(xxleft, yxright), BinOp.TIMES, x, y); :}
+| exp:x DIV exp:y                  {: RESULT = new ExpBin(loc(xxleft, yxright), BinOp.DIV, x, y); :}
+| exp:x POWER exp:y                {: RESULT = new ExpBin(loc(xxleft, yxright), BinOp.POWER, x, y); :}
+| exp:x EQ exp:y                   {: RESULT = new ExpBin(loc(xxleft, yxright), BinOp.EQ, x, y); :}
+| exp:x NE exp:y                   {: RESULT = new ExpBin(loc(xxleft, yxright), BinOp.NE, x, y); :}
 | exp:x LT exp:y                   {: RESULT = new ExpBin(loc(xxleft, yxright), BinOp.LT, x, y); :}
+| exp:x LE exp:y                   {: RESULT = new ExpBin(loc(xxleft, yxright), BinOp.LE, x, y); :}
+| exp:x GT exp:y                   {: RESULT = new ExpBin(loc(xxleft, yxright), BinOp.GT, x, y); :}
+| exp:x GE exp:y                   {: RESULT = new ExpBin(loc(xxleft, yxright), BinOp.GE, x, y); :}
+| exp:x AND exp:y                  {: RESULT = new ExpBin(loc(xxleft, yxright), BinOp.AND, x, y); :}
+| exp:x OR exp:y                   {: RESULT = new ExpBin(loc(xxleft, yxright), BinOp.OR, x, y); :}
 | LET:l ID:v EQ exp:i IN exp:b     {: RESULT = new ExpLet(loc(lxleft, bxright), v, i, b); :}
 | IF:i exp:t THEN exp:a ELSE exp:b {: RESULT = new ExpIf(loc(ixleft, bxright), t, a, b); :}
 | ID:f LPAREN exps:args RPAREN:r   {: RESULT = new ExpCall(loc(fxleft, rxright), f, args); :}

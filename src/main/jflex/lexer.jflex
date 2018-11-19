@@ -104,8 +104,18 @@ in           { return tok(IN); }
 {id}         { return tok(ID, yytext().intern()); }
 
 "="          { return tok(EQ); }
+"~="         { return tok(NE); }
 "<"          { return tok(LT); }
+"<="         { return tok(LE); }
+">"          { return tok(GT); }
+">="         { return tok(GE); }
+"&&"         { return tok(AND); }
+"||"         { return tok(OR); }
 "+"          { return tok(PLUS); }
+"-"          { return tok(MINUS); }
+"*"          { return tok(TIMES); }
+"/"          { return tok(DIV); }
+"^"          { return tok(POWER); }
 "("          { return tok(LPAREN); }
 ")"          { return tok(RPAREN); }
 ","          { return tok(COMMA); }

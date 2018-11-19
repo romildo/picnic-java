@@ -34,18 +34,44 @@ public class ExpBin extends Exp {
       left.semantic(env);
       right.semantic(env);
       switch (op) {
+         // arithmetic operations
          case PLUS:
+         case MINUS:
+         case TIMES:
+         case DIV:
+         case POWER:
             if (! left.type.is(INT.T))
                throw typeMismatch(left.loc, left.type, INT.T);
             if (! right.type.is(INT.T))
                throw typeMismatch(right.loc, right.type, INT.T);
             return INT.T;
 
+         // relational operations
          case LT:
+         case LE:
+         case GT:
+         case GE:
             if (! left.type.is(INT.T))
                throw typeMismatch(left.loc, left.type, INT.T);
             if (! right.type.is(INT.T))
                throw typeMismatch(right.loc, right.type, INT.T);
+            return BOOL.T;
+
+         case EQ:
+         case NE:
+            if (left.type.is(right.type))
+               return BOOL.T;
+            if (right.type.is(left.type))
+               return BOOL.T;
+            throw typeMismatch(right.loc, right.type, left.type);
+
+         // logical operations
+         case AND:
+         case OR:
+            if (! left.type.is(BOOL.T))
+               throw typeMismatch(left.loc, left.type, BOOL.T);
+            if (! right.type.is(BOOL.T))
+               throw typeMismatch(right.loc, right.type, BOOL.T);
             return BOOL.T;
 
          default:
