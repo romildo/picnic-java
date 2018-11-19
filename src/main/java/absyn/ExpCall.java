@@ -9,7 +9,8 @@ public class ExpCall extends Exp {
    public final String name;
    public final List<Exp> args;
 
-   public ExpCall(String name, List<Exp> args) {
+   public ExpCall(Loc loc, String name, List<Exp> args) {
+      super(loc);
       this.name = name;
       this.args = args;
    }

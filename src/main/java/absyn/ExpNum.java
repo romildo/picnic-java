@@ -6,7 +6,8 @@ public class ExpNum extends Exp {
 
    public final long value;
 
-   public ExpNum(String value) {
+   public ExpNum(Loc loc, String value) {
+      super(loc);
       this.value = new Long(value);
    }
 
