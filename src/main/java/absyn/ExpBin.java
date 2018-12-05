@@ -1,6 +1,11 @@
 package absyn;
 
 import env.Env;
+import env.Table;
+import interpret.Value;
+import interpret.ValueBool;
+import interpret.ValueInt;
+import io.vavr.collection.List;
 import io.vavr.collection.Tree;
 import types.BOOL;
 import types.INT;
@@ -79,4 +84,21 @@ public class ExpBin extends Exp {
       }
    }
 
+   @Override
+   public Value eval(Table<Value> memory, List<Fun> functions) {
+      Value x = left.eval(memory, functions);
+      Value y = right.eval(memory, functions);
+      switch (op) {
+         case PLUS: return new ValueInt(((ValueInt)x).value + ((ValueInt)y).value);
+         case MINUS: return new ValueInt(((ValueInt)x).value - ((ValueInt)y).value);
+         case TIMES: return new ValueInt(((ValueInt)x).value * ((ValueInt)y).value);
+         case DIV: return new ValueInt(((ValueInt)x).value / ((ValueInt)y).value);
+         case POWER: return new ValueInt(Math.round(Math.pow(((ValueInt)x).value, ((ValueInt)y).value)));
+
+         case AND: return new ValueBool(((ValueBool)x).value && ((ValueBool)y).value);
+         // TODO: other operators
+      }
+
+      return super.eval(memory, functions);
+   }
 }

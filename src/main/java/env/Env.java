@@ -11,6 +11,7 @@ public class Env {
   public Env() {
     tenv = new Table<Type>();
     venv = new Table<Entry>();
+    put(venv, "printint", new FunEntry(List.of(INT.T), INT.T) );
   }
 
   private static <E> void put(Table<E> table, String name, E value) {

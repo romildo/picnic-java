@@ -1,6 +1,10 @@
 package absyn;
 
 import env.Env;
+import env.Table;
+import interpret.Value;
+import interpret.ValueBool;
+import io.vavr.collection.List;
 import io.vavr.collection.Tree;
 import types.BOOL;
 import types.Type;
@@ -24,4 +28,8 @@ public class ExpBool extends Exp {
       return BOOL.T;
    }
 
+   @Override
+   public Value eval(Table<Value> memory, List<Fun> functions) {
+      return new ValueBool(value);
+   }
 }
