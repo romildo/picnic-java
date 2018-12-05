@@ -12,7 +12,9 @@ import absyn.Program;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
+import env.Table;
 import error.CompilerError;
+import interpret.Value;
 import io.vavr.render.dot.DotFile;
 import io.vavr.render.text.Boxes;
 import io.vavr.render.text.PrettyPrinter;
@@ -55,6 +57,9 @@ class DriverOptions {
 
    @Parameter(names = {"--dot-annotated-ast"}, description = "Generate dot file of annotated syntax tree")
    public boolean dot_annotted_ast = false;
+
+   @Parameter(names = {"--execute", "-e"}, description = "Execute the program")
+   public boolean execute = false;
 }
 
 // main
@@ -94,7 +99,7 @@ public class Driver {
          // do only lexical analyses
          if (options.lexer)
             lexicalAnalysis(name, input);
-         else if (options.parser)
+         else if (options.parser || options.execute)
             syntaxAnalysis(options, name, input);
 
       } catch (CompilerError e) {
@@ -175,6 +180,9 @@ public class Driver {
       if (options.dot_annotted_ast) {
          DotFile.write(program.toTree(), name + ".annotated.dot");
       }
+
+      if (options.execute)
+         program.execute();
 
    }
 

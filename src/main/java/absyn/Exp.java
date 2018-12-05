@@ -1,6 +1,10 @@
 package absyn;
 
 import env.Env;
+import env.Table;
+import interpret.Value;
+import interpret.ValueInt;
+import io.vavr.collection.List;
 import types.Type;
 
 public abstract class Exp extends AST {
@@ -30,4 +34,8 @@ public abstract class Exp extends AST {
    // Should be defined in the concrete subclasses.
    protected abstract Type semantic_(Env env);
 
+   // TODO: abstract
+   public Value eval(Table<Value> memory, List<Fun> functions) {
+      return new ValueInt(0L);
+   }
 }

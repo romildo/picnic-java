@@ -3,6 +3,8 @@ package absyn;
 import env.Entry;
 import env.Env;
 import env.FunEntry;
+import env.Table;
+import interpret.Value;
 import io.vavr.collection.List;
 import io.vavr.collection.Tree;
 import io.vavr.render.ToTree;
@@ -41,6 +43,12 @@ public class Program extends AST {
       Entry entry = env.venv.get("main".intern());
       if (! (entry instanceof FunEntry))
          throw noMain(loc);
+   }
+
+   public void execute() {
+      Exp prg = new ExpCall(null, "main", List.of(new ExpInt(null, "0")));
+      Table<Value> memory = new Table<>();
+      prg.eval(memory, functions);
    }
 
 }

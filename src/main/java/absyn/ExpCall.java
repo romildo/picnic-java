@@ -3,8 +3,12 @@ package absyn;
 import env.Entry;
 import env.Env;
 import env.FunEntry;
+import env.Table;
+import interpret.Value;
+import interpret.ValueInt;
 import io.vavr.collection.List;
 import io.vavr.collection.Tree;
+import io.vavr.control.Option;
 import io.vavr.render.ToTree;
 import types.Type;
 
@@ -49,4 +53,30 @@ public class ExpCall extends Exp {
       return fentry.result;
    }
 
+   @Override
+   public Value eval(Table<Value> memory, List<Fun> functions) {
+      List<Value> args = arguments.map(a -> a.eval(memory, functions));
+      Option<Fun> option = functions.find(fun -> fun.name.id == name);
+      if (option.isEmpty())
+         return applyPrimitive(name, args);
+      Fun f = option.get();
+      memory.beginScope();
+      f.parameters.zipWith(args, (p, v) -> {
+         memory.put(p.id, v);
+         return null; });
+      Value x = f.body.eval(memory, functions);
+      memory.endScope();
+      return x;
+   }
+
+   private Value applyPrimitive(String name, List<Value> arguments) {
+      switch (name) {
+         case "printint":
+            System.out.println(((ValueInt)arguments.get(0)).value);
+            return new ValueInt(0L);
+         default:
+            fatal("unknown primitive function");
+            return new ValueInt(0L);
+      }
+   }
 }
